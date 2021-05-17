@@ -1,0 +1,56 @@
+syntax = "proto2";
+
+// Flag ya solo puede tener los valores definidos dentro del enum y no otros
+// como seria en un string
+// SIGNIFICADO de los enum values
+//  general_chat es el flag para el chat general
+// private_chat es el flag para el chat privado
+// update_status es el flag para solicitar un cambio de status
+// user_info es el flag para para pedir la información de un usuario
+// user_list listar todos los usuarios
+// El server no necesita una respuesta personalizada es el server es quien sabe
+// que mandarle A cada uno de los integrantes del chat el en teoria puede mandar
+// el response como un simple string ej: pedis un la info del usuario user_dummy
+// en lugar de retornar una estructura que igual vas a tener que pasar a un
+// string y al client
+// no le interesara esa estructura despues el server retorna un string con toda
+// la info y el client Solo se encarga de mostrar lo que el server le dice USO
+// del campo sender Siempre se manda
+
+// USO del campo message
+// general_chat-> se llena el mensaje que a todos menos el sender esta mandando
+// private_chat -> Se llena con el mensaje privado
+
+// USO del campo EXTRA
+// private_chat -> el campo extra  debe contener el username del recipient
+// update_status -> el campo extra debe de contener 'ACTIVO' 'OCUPADO' o
+// 'INACIVO'
+// user_info -> el campo extra debe contener el username del recipient
+
+// Caso del register
+// En sender ya estas mandando tu username
+// En ip siempre va tu ip
+// Con este modelo tenes la facilidad de repetir siempre el llenar sender, ip y
+// flag y con eso Ya podes manejar incluso varios escenarios sin tener que tocar
+// mas el modelo y solo cuando es necesario complementas
+message Payload {
+  optional string sender = 1;
+  // Agregas tu ip para saber que siempre estas mandando los mensajes de un
+  // mismo origen
+  optional string ip = 2;
+  optional string message = 3;
+  enum PayloadFlag {
+    general_chat = 0;
+    private_chat = 1;
+    update_status = 2;
+    user_info = 3;
+    user_list = 4;
+    register = 5;
+  }
+  optional PayloadFlag flag = 4;
+  optional string extra = 5;
+  // Representación de un HTTP REQUEST
+  // 200 -> ok
+  // 500 -> server error
+  optional int32 code = 6;
+}
