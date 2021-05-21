@@ -44,10 +44,6 @@ void printMenu() {
     cout << "Enter the desired option (number): ";
 }
 
-void sendMessage(Payload payloadData) {
-
-}
-
 void *sendMessageThreadFn(void *arg) {
     int opt;//menu option
     char outMessageBuffer[BUFFER_SIZE + MAX_USERNAME_LENGTH]; //
